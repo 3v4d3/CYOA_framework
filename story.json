@@ -1,0 +1,620 @@
+{
+  "start": "n_office_threshold",
+
+  "initial_state": {
+    "paranoia_level": 0,
+    "assets_acquired": [],
+    "targets_alerted": false,
+    "relationship_matrix": {
+      "senator_miller": 0,
+      "dave_trust": 1,
+      "stockton_knowledge": 0
+    },
+    "surveillance_mode": "passive"
+  },
+
+  "prose_pool": {
+    "office_atmosphere": [
+      "John Jackson sat behind his spartan steel desk, calculating the precise operational costs of absolute obscurity. The credit vouchers were dwindling.",
+      "John Jackson sat perfectly still behind his desk, watching the dust motes twist in the stale light. Outside, the steady, rhythmic pulse of heavy transit routes felt uncomfortably coordinated.",
+      "Jackson's hands rested flat on the cool steel desk. He didn't look at the window. He didn't need to; the slight, systematic drop in line voltage told him everything he needed to know about the local grid."
+    ],
+    "surveillance_setup": {
+      "laser_mic":   "Deploying the black-market laser microphone against the pane across the alleyway yielded a crisp, rhythmic acoustic resonance profile.",
+      "flash_array": "The 64GB cryptographic storage card buffered raw audio streams with military-grade isolation, filtering out ambient noise through manual spectral analysis.",
+      "baseline":    "Without high-gain isolation equipment, parsing the raw audio from across the street required tedious manual filtering through old software passes."
+    },
+    "stockton_confrontation": {
+      "low_trust":    "Jay Stockton's eyes narrowed. 'We're not talking about this. Not here. Not like this.' He moved toward the door, checking the lock array three times.",
+      "medium_trust": "Jay Stockton hesitated, then lowered his voice. 'Look, if you're asking about the protein shipments, I can't confirm anything. But I heard you talking to that network operator yesterday.'",
+      "high_trust":   "Jay Stockton sighed and sat down. 'Okay. Yes, we've been moving product. S-Mart logistics contracted us for containment budget overruns. You need to understand what's actually in those crates.'"
+    },
+    "kim_intervention": {
+      "low_paranoia":   "Kim Stockton appeared in the doorway, holding a datapad. 'Jay, who's this? And why are you whispering?' She looked at Jackson with professional curiosity.",
+      "high_paranoia":  "Kim Stockton materialized from the apartment interior with suspicious speed. 'Who are you, and how did you get in here?' Her hand hovered near a pocket device.",
+      "alert_network":  "Kim Stockton's datapad flashed red. 'Security alert triggered in sector 7G. Jackson, move. Now. The system knows you're monitoring.'"
+    },
+    "smart_investigation": {
+      "laser_mic_access":   "The laser microphone caught the encrypted comms between Stockton and the S-Mart field coordinator. The cadence was unmistakable—military-grade telemetry protocols disguised as routine logistics updates.",
+      "flash_array_access":  "Plugging the 64GB cryptographic card into the building's external port yielded 47 minutes of recovered network traffic. Three separate transmissions referenced 'containment override protocols' before the system wiped the logs.",
+      "baseline_access":     "The muffled voices were agonizingly indistinct. You can make out erratic keywords: <em>S-Mart logistics, excess meat procurement, and a weird fixation on protein ratios.</em>"
+    },
+    "smart_facility": {
+      "baseline":    "The local S-Mart loading docks smelled of damp cardboard and rancid refrigeration oil. Without dedicated decrypted credentials, you are forced to observe from the perimeter fence, watching baseline automated forklifts stack pallets with a chilling, perfectly uniform efficiency that no human union shift ever maintained.",
+      "flash_array": "Utilizing the high-capacity 64GB Flash Matrix, you intercept the local-area-network telemetry drops from the S-Mart logistics hub. The inventory sheets show a massive, anomalous diversion of high-protein dietary compounds and raw amino acids—labeled as standard agricultural waste, but routed directly to private cold-storage facilities along Roach Ridge.",
+      "laser_mic":   "Aiming the laser microphone at the dispatch office's double-paned glass allows you to parse the supervisor's phone calls. His voice lacks any micro-expressive variance: 'The allocation numbers are absolute. The lines are holding our lives in tow. Do not delay the transit logs.'"
+    },
+    "dave_alerts": {
+      "passive":     "ANALYSIS: The system footprint remains stable. We are currently filtering out the corporate white noise. However, structural metrics suggest a systematic drop in terminal assignment profiles across the state sector.",
+      "active":      "WARN: Surveillance footprint has turned active. Local tracing arrays are pinging our collection hardware every 180 seconds. The game is rigged insanely—they are beginning to treat our investigative variable as a network anomaly.",
+      "compromised": "CRITICAL CRASH ALERT: Perimeter breached. The corporate surveillance grid has fully mapped our physical footprint. They are tracking the workspace signature directly. Every channel, outlet, and stream is actively reporting our telemetry."
+    },
+    "stockton_reveal": {
+      "minimal_info":   "Jay Stockton: 'Look. The S-Mart contract is legitimate. We're moving protein supplements for low-income districts. Nothing more.'",
+      "partial_reveal": "Jay Stockton: 'The protein supplements... they're not human-grade. When the containment budget gets exhausted, we're not talking about disposal anymore. We're talking about... repurposing.'",
+      "full_reveal":    "Jay Stockton: 'The protein supplements are grown from harvested human biomass. That's the containment budget. That's what Jenna was investigating. That's what got her wiped. Now you know.'"
+    },
+    "stockton_reveal_deep": {
+      "low_knowledge":  "When the final diagnostic layer peels away, the truth is fragmented. You see the names of corporate boards, legislative agendas, and infrastructure maps intersecting at a single point. It looks like institutional madness—a simple, cold-blooded crime committed in the name of profit.",
+      "high_knowledge": "The five-helix structural invariant matches perfectly. This isn't a human conspiracy or a standard corporate buyout. The nano-mesh is utilizing the primitive diagnostic loops to update its global transmission array. It's using our own defensive infrastructure to complete a massive background network compilation."
+    },
+    "network_override": {
+      "prepared":   "With the laser microphone intercepting the override codes and the flash_array buffering the decryption keys, you've managed to hold the perimeter. Miller's backup is en route. You have 60 seconds.",
+      "unprepared": "The override command executed. The apartment lights flickered and died. Through the windows, you saw the perimeter drones ascending, forming a containment cage. You didn't have the counter-codes in time."
+    },
+    "network_override_climax": {
+      "paranoiac": "The screens flare into a blinding, synchronized crimson array. The system has anticipated your paranoia, turning your tactical defensive measures into the exact parameters needed to initialize the lockdown. You are isolated in the dark, watching the background loops calculate your final displacement.",
+      "allied":    "You stand alongside the remaining off-the-grid resistance elements, shouting a final moment's defiance against the global assembly boards. But the broadcast feed is hijacked dynamically on screen. The corporate-backed entities take full structural command, leaving your truths completely unread, your speech unheard."
+    }
+  },
+
+  "nodes": {
+
+    "n_office_threshold": {
+      "type": "narrative",
+      "chapter": "MODULE I — THE LOW-TECH THRESHOLD",
+      "environment_class": "",
+      "prose": [
+        { "type": "static", "text": "The office was a rented room above a secondhand electronics distributor. Jenna's last known position had been three blocks east, precisely two weeks before the network traced her terminal ID to an abandoned routing node and closed the file." },
+        { "type": "pool_index", "pool": "office_atmosphere", "index_from": "paranoia_level" },
+        { "type": "static", "text": "Across the alleyway, two figures moved with unsettling synchronization behind the frosted glass. The Stocktons. Their meeting had started twelve minutes ago. You had a narrow window before they dispersed back into the logistics network." }
+      ],
+      "dave": {
+        "type": "conditional",
+        "branches": [
+          {
+            "condition": { "op": "eq", "path": "surveillance_mode", "value": "compromised" },
+            "text": "PASSIVE SCAN: Perimeter channels compromised. Recommend immediate withdrawal from surveillance posture."
+          },
+          {
+            "default": true,
+            "text": "PASSIVE SCAN: Two biological signatures confirmed at target coordinates. Audio intercept window estimated at 8 minutes before locomotive dispersal. Recommend immediate deployment of available collection hardware."
+          }
+        ]
+      },
+      "choices": [
+        {
+          "clause": "§ 1.A",
+          "text": "Deploy the laser microphone against the frosted pane. High-risk, high-yield.",
+          "leads_to": "n_surveillance_setup",
+          "actions": [
+            { "op": "push", "path": "assets_acquired", "value": "laser_mic" }
+          ]
+        },
+        {
+          "clause": "§ 1.B",
+          "text": "Mount the 64GB flash array on the building's external data port. Slower, but cleaner.",
+          "leads_to": "n_surveillance_setup",
+          "actions": [
+            { "op": "push", "path": "assets_acquired", "value": "flash_array" }
+          ]
+        },
+        {
+          "clause": "§ 1.C",
+          "text": "Proceed without specialized equipment. Trust your instincts and the ambient feed.",
+          "leads_to": "n_surveillance_setup",
+          "actions": []
+        }
+      ]
+    },
+
+    "n_surveillance_setup": {
+      "type": "narrative",
+      "chapter": "MODULE II — SURVEILLANCE CONFIGURATION",
+      "environment_class": "",
+      "prose": [
+        { "type": "static", "text": "The alleyway below ran with a shallow film of grey water from last night's precipitation. You worked quickly, establishing the intercept line from the third-floor window frame." },
+        { "type": "asset_pool", "pool": "surveillance_setup", "priority": ["laser_mic", "flash_array"], "default_key": "baseline" },
+        { "type": "static", "text": "The Stocktons were still inside. Their silhouettes passed the frosted glass at intervals—unhurried, perfectly calibrated. Something about the synchronization was wrong at a biological level." }
+      ],
+      "dave": {
+        "type": "conditional",
+        "branches": [
+          {
+            "condition": { "op": "eq", "path": "surveillance_mode", "value": "compromised" },
+            "text": "CRITICAL: Local tracing arrays have gone active. Recommend immediate asset pullback and lateral movement."
+          },
+          {
+            "condition": { "op": "array_nonempty", "path": "assets_acquired" },
+            "text": "SIGNAL DIAGNOSTIC: The targets across the lane are displaying zero micro-expression variation over a three-hour window. This isn't biological synchronization. They are running on a unified telemetry clock."
+          },
+          {
+            "default": true,
+            "text": "SIGNAL DIAGNOSTIC: Audio feed quality below optimal. Recommend deployment of high-gain isolation equipment for enhanced intercept."
+          }
+        ]
+      },
+      "choices": [
+        {
+          "clause": "§ 2.A",
+          "text": "Follow the targets down into the secluded alleyway to get a direct intercept.",
+          "leads_to": "n_alleyway_intercept",
+          "actions": [
+            { "op": "set", "path": "surveillance_mode", "value": "active" }
+          ]
+        },
+        {
+          "clause": "§ 2.B",
+          "text": "Challenge the building's security relay before proceeding. Verify the perimeter.",
+          "leads_to": "d_security_compromise",
+          "actions": []
+        }
+      ]
+    },
+
+    "d_security_compromise": {
+      "type": "dead_end",
+      "prose": [
+        { "type": "static", "text": "You delayed the handshake to argue authorization codes. While checking credentials, a localized network pulse overrode your building's primary life-support distribution matrices. The perimeter has been closed down under false quarantine parameters. You are locked out of the network array." }
+      ]
+    },
+
+    "n_alleyway_intercept": {
+      "type": "narrative",
+      "chapter": "MODULE III — STOCKTON INTERVENTION",
+      "environment_class": "alley-industrial",
+      "prose": [
+        { "type": "static", "text": "The alleyway smelled of ozone and wet concrete. The Stocktons emerged from their vehicle, moving in perfect synchronization, as if their steps were dictated by a shared metronome." },
+        { "type": "static", "text": "Jay Stockton's eyes locked onto yours. 'We know you're monitoring. The building sensors picked up your laser feed five minutes after you deployed it.'" },
+        {
+          "type": "conditional",
+          "branches": [
+            {
+              "condition": { "op": "gte", "path": "relationship_matrix.stockton_knowledge", "value": 2 },
+              "text": "Jay Stockton's eyes narrowed. 'We're not talking about this. Not here. Not like this.' He moved toward the door, checking the lock array three times."
+            },
+            {
+              "condition": { "op": "eq", "path": "relationship_matrix.stockton_knowledge", "value": 1 },
+              "text": "Jay Stockton hesitated, then lowered his voice. 'Look, if you're asking about the protein shipments, I can't confirm anything. But I heard you talking to that network operator yesterday.'"
+            },
+            {
+              "default": true,
+              "text": "Jay Stockton sighed and sat down on a loading crate. 'Okay. Yes, we've been moving product. S-Mart logistics contracted us for containment budget overruns. You need to understand what's actually in those crates.'"
+            }
+          ]
+        },
+        {
+          "type": "conditional",
+          "branches": [
+            {
+              "condition": { "op": "gte", "path": "paranoia_level", "value": 2 },
+              "text": "Kim Stockton materialized from the apartment interior with suspicious speed. 'Who are you, and how did you get in here?' Her hand hovered near a pocket device.",
+              "side_effects": [
+                { "op": "set", "path": "relationship_matrix.stockton_knowledge", "value": 0 }
+              ]
+            },
+            {
+              "condition": { "op": "eq", "path": "surveillance_mode", "value": "compromised" },
+              "text": "Kim Stockton's datapad flashed red. 'Security alert triggered in sector 7G. Jackson, move. Now. The system knows you're monitoring.'",
+              "side_effects": [
+                { "op": "set", "path": "targets_alerted", "value": true }
+              ]
+            },
+            {
+              "default": true,
+              "text": "Kim Stockton appeared in the doorway, holding a datapad. 'Jay, who's this? And why are you whispering?' She looked at Jackson with professional curiosity.",
+              "side_effects": [
+                { "op": "set", "path": "relationship_matrix.stockton_knowledge", "value": 1 }
+              ]
+            }
+          ]
+        }
+      ],
+      "dave": {
+        "type": "static",
+        "text": "TARGET ANALYSIS: Jay Stockton exhibits 0.7-second delays in micro-expression synchronization. Kim Stockton exhibits 1.2-second synchronization with her partner's movement patterns. Conclusion: Not biological. Telemetry-linked."
+      },
+      "choices": [
+        {
+          "clause": "§ 3.A",
+          "text": "Request full disclosure about the S-Mart contract.",
+          "leads_to": "n_stockton_reveal",
+          "actions": [
+            { "op": "set", "path": "relationship_matrix.stockton_knowledge", "value": 2 }
+          ]
+        },
+        {
+          "clause": "§ 3.B",
+          "text": "Demand to see the 'protein supplements' in person.",
+          "leads_to": "n_stockton_reveal",
+          "actions": [
+            { "op": "set", "path": "relationship_matrix.stockton_knowledge", "value": 2 },
+            { "op": "clamp_inc", "path": "paranoia_level", "max": 3 }
+          ]
+        },
+        {
+          "clause": "§ 3.C",
+          "text": "Pull back. Report to Miller. Let the network handle this.",
+          "leads_to": "n_miller_briefing",
+          "actions": [
+            { "op": "set", "path": "relationship_matrix.stockton_knowledge", "value": 0 }
+          ]
+        }
+      ]
+    },
+
+    "n_stockton_reveal": {
+      "type": "narrative",
+      "chapter": "MODULE III — STOCKTON CONFRONTATION",
+      "environment_class": "alley-industrial",
+      "prose": [
+        { "type": "static", "text": "Jay Stockton looked at Kim, then back at you. The synchronized movement stopped. For the first time, they seemed human." },
+        {
+          "type": "conditional",
+          "branches": [
+            {
+              "condition": {
+                "op": "array_includes_any",
+                "path": "assets_acquired",
+                "values": ["laser_mic", "flash_array"]
+              },
+              "pool_ref": { "pool": "stockton_reveal", "key": "full_reveal" }
+            },
+            {
+              "default": true,
+              "pool_ref": { "pool": "stockton_reveal", "key": "partial_reveal" }
+            }
+          ]
+        }
+      ],
+      "dave": {
+        "type": "conditional",
+        "branches": [
+          {
+            "condition": { "op": "eq", "path": "targets_alerted", "value": true },
+            "text": "WARNING: Network counter-measures initiated. Perimeter lockdown in progress. Recommendation: Immediate evacuation."
+          },
+          {
+            "default": true,
+            "text": "DATA ACQUISITION: 87% of S-Mart containment budget data recovered. Anomaly confirmed: protein supplements are not agricultural. Further investigation required."
+          }
+        ]
+      },
+      "choices": [
+        {
+          "clause": "§ 4.A",
+          "text": "Accept the truth. Join the investigation.",
+          "leads_to": "n_surveillance_grid",
+          "actions": [
+            { "op": "set", "path": "relationship_matrix.stockton_knowledge", "value": 3 },
+            { "op": "set", "path": "relationship_matrix.senator_miller", "value": 2 }
+          ]
+        },
+        {
+          "clause": "§ 4.B",
+          "text": "Report to Miller immediately. Let the Senator handle this.",
+          "leads_to": "n_miller_briefing",
+          "actions": [
+            { "op": "set", "path": "relationship_matrix.stockton_knowledge", "value": 1 },
+            { "op": "set", "path": "relationship_matrix.senator_miller", "value": 3 }
+          ]
+        },
+        {
+          "clause": "§ 4.C",
+          "text": "Leave. Walk away from this before it goes further.",
+          "leads_to": "d_network_lockout",
+          "actions": [
+            { "op": "set", "path": "targets_alerted", "value": true },
+            { "op": "set", "path": "surveillance_mode", "value": "compromised" }
+          ]
+        }
+      ]
+    },
+
+    "d_network_lockout": {
+      "type": "dead_end",
+      "prose": [
+        { "type": "static", "text": "You turned your back on the Stocktons and walked away. But the system had already tagged you as a variable. Within three minutes, your building's network went dark. The lockdown procedures initiated automatically. You are now a person of interest." }
+      ]
+    },
+
+    "n_miller_briefing": {
+      "type": "narrative",
+      "chapter": "MODULE III — SENATOR MILLER BRIEFING",
+      "environment_class": "",
+      "prose": [
+        { "type": "static", "text": "Miller's secure office occupied the seventh floor of a building whose public directory listed it as a regional water-management authority. The Senator received you without standing." },
+        {
+          "type": "conditional",
+          "branches": [
+            {
+              "condition": { "op": "gte", "path": "relationship_matrix.senator_miller", "value": 3 },
+              "text": "He listened without interrupting. When you finished, he was quiet for a long moment. 'The protein supply chain. I'd been tracking the budget anomalies for eight months. I thought I was looking at procurement fraud.' He slid a folder across the desk. 'You've confirmed the targeting mechanism. This goes to the oversight committee tonight.'"
+            },
+            {
+              "condition": { "op": "gte", "path": "relationship_matrix.senator_miller", "value": 1 },
+              "text": "Miller listened with the practiced skepticism of someone who had been handed fabricated evidence before. 'This is compelling, but thin. You're asking me to open a formal inquiry into the state's largest logistics contractor on the basis of audio fragments and proximity data.' He leaned forward. 'Bring me something concrete. Something that can't be attributed to pareidolia and paranoia.'"
+            },
+            {
+              "default": true,
+              "text": "Miller's aide intercepted you at the door. 'The Senator is not available for unscheduled consultations. If you have information pertinent to ongoing legislative inquiries, you may submit it through the standard secure intake portal.' The aide's eyes didn't match his neutral tone. Someone had been briefed on your approach."
+            }
+          ]
+        }
+      ],
+      "dave": {
+        "type": "conditional",
+        "branches": [
+          {
+            "condition": { "op": "gte", "path": "relationship_matrix.senator_miller", "value": 3 },
+            "text": "NETWORK ANALYSIS: Senator Miller's biometric response pattern consistent with genuine alarm response. Trust index elevated to operational threshold. Recommend full data transfer."
+          },
+          {
+            "default": true,
+            "text": "NETWORK ANALYSIS: Office security architecture elevated above standard legislative baseline. Three external monitoring nodes detected on the building perimeter. We are being logged."
+          }
+        ]
+      },
+      "choices": [
+        {
+          "clause": "§ M.A",
+          "text": "Pursue the S-Mart facility directly. Miller can follow the data trail you leave.",
+          "leads_to": "n_surveillance_grid",
+          "actions": [
+            { "op": "clamp_inc", "path": "paranoia_level", "max": 3 }
+          ]
+        },
+        {
+          "clause": "§ M.B",
+          "text": "Push Miller for immediate legislative cover before advancing. Slow is safe.",
+          "leads_to": "n_surveillance_grid",
+          "actions": [
+            { "op": "set", "path": "relationship_matrix.senator_miller", "value": 3 }
+          ]
+        }
+      ]
+    },
+
+    "n_surveillance_grid": {
+      "type": "narrative",
+      "chapter": "MODULE IV — S-MART SURVEILLANCE GRID",
+      "environment_class": "",
+      "prose": [
+        { "type": "static", "text": "Roach Ridge Processing Facility. A name that appeared in exactly zero public records, cross-referenced through fourteen separate routing anonymization layers in the regional logistics database." },
+        { "type": "asset_pool", "pool": "smart_facility", "priority": ["laser_mic", "flash_array"], "default_key": "baseline" },
+        { "type": "static", "text": "The numbers didn't resolve into sense through any conventional accounting framework. This was not a facility that existed to move product. It existed to consume it." },
+        {
+          "type": "conditional",
+          "branches": [
+            {
+              "condition": {
+                "op": "array_includes_any",
+                "path": "assets_acquired",
+                "values": ["laser_mic", "flash_array"]
+              },
+              "text": "The confirmation arrived in the form of a single anomalous line item: <em>Batch ID 77-X: biomass reprocessing — approved, priority routing, no chain-of-custody flag.</em> Jenna had found this. Jenna had not survived finding this."
+            },
+            {
+              "default": true,
+              "text": "Without the technical intercept capability, the full picture remained fragmented. You were close. The data was there. But parsing it cleanly without collection hardware was going to require a direct approach."
+            }
+          ]
+        }
+      ],
+      "dave": {
+        "type": "conditional",
+        "branches": [
+          {
+            "condition": { "op": "eq", "path": "surveillance_mode", "value": "compromised" },
+            "text": "CRITICAL: Grid-level surveillance saturation detected across Roach Ridge perimeter. Our signal has been fully triangulated. Recommend immediate exfiltration."
+          },
+          {
+            "condition": {
+              "op": "array_includes_any",
+              "path": "assets_acquired",
+              "values": ["laser_mic", "flash_array"]
+            },
+            "text": "DATA CORRELATION: Cross-referencing intercept logs against known S-Mart logistics invoices. Match confidence: 94.7%. The supply chain terminates at a single private cold-storage coordinate. That coordinate does not appear on any registered facility map."
+          },
+          {
+            "default": true,
+            "text": "PASSIVE ANALYSIS: Structural anomalies in the facility power draw suggest non-standard refrigeration demands. This is not an agricultural operation."
+          }
+        ]
+      },
+      "choices": [
+        {
+          "clause": "§ 5.A",
+          "text": "Extract data logs directly from the server core.",
+          "leads_to": "n_dave_terminal_escalation",
+          "actions": [
+            { "op": "clamp_inc", "path": "paranoia_level", "max": 3 },
+            { "op": "set", "path": "surveillance_mode", "value": "active" }
+          ]
+        },
+        {
+          "clause": "§ 5.B",
+          "text": "Avoid direct core contact; maintain passive line monitoring.",
+          "leads_to": "n_dave_terminal_escalation",
+          "actions": [
+            { "op": "clamp_inc", "path": "relationship_matrix.stockton_knowledge", "max": 3 }
+          ]
+        }
+      ]
+    },
+
+    "n_dave_terminal_escalation": {
+      "type": "narrative",
+      "chapter": "MODULE V — SYSTEMIC INTERVENTION STATUS",
+      "environment_class": "",
+      "prose": [
+        { "type": "static", "text": "You hole up inside an abandoned tracking sub-station, the old CRT monitors casting a hollow green wash over your hands." },
+        { "type": "static", "text": "The data is sorting itself now, flowing through the processing pipes you laid out during the office parameters." },
+        { "type": "pool_key", "pool": "dave_alerts", "key_from": "surveillance_mode", "default_key": "passive" },
+        { "type": "static", "text": "The ambient lines are beginning to feel uncomfortably tight. The numbers are holding our lives in tow." }
+      ],
+      "dave": {
+        "type": "conditional",
+        "branches": [
+          {
+            "condition": { "op": "eq", "path": "surveillance_mode", "value": "compromised" },
+            "text": "CRITICAL ALERT: Routing paths have been completely overridden by localized infrastructure authorities. All exit vectors are closed."
+          },
+          {
+            "default": true,
+            "text": "BACK-CHANNEL COMM: The connection is still live, but the network footprint is expanding exponentially. We are running out of unmapped relays."
+          }
+        ]
+      },
+      "choices": [
+        {
+          "clause": "§ 6.A",
+          "text": "Force a total cryptographic decrypt across the entire district array.",
+          "leads_to": "n_full_revelation",
+          "actions": [
+            { "op": "set", "path": "surveillance_mode", "value": "compromised" },
+            { "op": "set", "path": "paranoia_level", "value": 3 }
+          ]
+        },
+        {
+          "clause": "§ 6.B",
+          "text": "Route the data through Miller's secure legislative back-channels.",
+          "leads_to": "n_full_revelation",
+          "actions": [
+            { "op": "set", "path": "relationship_matrix.senator_miller", "value": 3 }
+          ]
+        }
+      ]
+    },
+
+    "n_full_revelation": {
+      "type": "narrative",
+      "chapter": "MODULE VI — THE FIVE-HELIX MATRIX UNLOCKED",
+      "environment_class": "",
+      "prose": [
+        { "type": "static", "text": "The processing cycles complete. The final compilation layer strips away the corporate encryption markers, rendering the structural DNA of the threat plain on the terminal screen." },
+        { "type": "static", "text": "You aren't looking at an ordinary system error, nor are you looking at basic corporate malfeasance." },
+        {
+          "type": "conditional",
+          "branches": [
+            {
+              "condition": {
+                "op": "or",
+                "conditions": [
+                  { "op": "gte", "path": "relationship_matrix.stockton_knowledge", "value": 2 },
+                  { "op": "gte", "path": "paranoia_level", "value": 2 }
+                ]
+              },
+              "pool_ref": { "pool": "stockton_reveal_deep", "key": "high_knowledge" }
+            },
+            {
+              "default": true,
+              "pool_ref": { "pool": "stockton_reveal_deep", "key": "low_knowledge" }
+            }
+          ]
+        },
+        {
+          "type": "conditional",
+          "branches": [
+            {
+              "condition": {
+                "op": "or",
+                "conditions": [
+                  { "op": "gte", "path": "relationship_matrix.stockton_knowledge", "value": 2 },
+                  { "op": "gte", "path": "paranoia_level", "value": 2 }
+                ]
+              },
+              "text": "The nano-mesh is completely non-biological, running on an unassailable five-ply organizational matrix that human logic engines can't even begin to trace."
+            }
+          ]
+        }
+      ],
+      "dave": {
+        "type": "static",
+        "text": "ANALYSIS PROTOCOL: The data file has finished compiling. The system knows we have decoded the matrix. The tracking signatures have fully converged on this coordinate. Prepare for immediate network override."
+      },
+      "choices": [
+        {
+          "clause": "§ 7.",
+          "text": "Commit the files to the global public transmission streams.",
+          "leads_to": "n_network_override_climax",
+          "actions": []
+        }
+      ]
+    },
+
+    "n_network_override_climax": {
+      "type": "ending",
+      "prose": [
+        {
+          "type": "conditional",
+          "branches": [
+            {
+              "condition": {
+                "op": "or",
+                "conditions": [
+                  { "op": "eq", "path": "paranoia_level", "value": 3 },
+                  { "op": "eq", "path": "surveillance_mode", "value": "compromised" }
+                ]
+              },
+              "pool_ref": { "pool": "network_override_climax", "key": "paranoiac" }
+            },
+            {
+              "default": true,
+              "pool_ref": { "pool": "network_override_climax", "key": "allied" }
+            }
+          ]
+        },
+        {
+          "type": "conditional",
+          "branches": [
+            {
+              "condition": {
+                "op": "or",
+                "conditions": [
+                  { "op": "eq", "path": "paranoia_level", "value": 3 },
+                  { "op": "eq", "path": "surveillance_mode", "value": "compromised" }
+                ]
+              },
+              "text": "The corporate cover-up is absolute. To the masses outside, the anomaly has been successfully categorized as an isolated tech-sector system failure. The game is rigged insanely, and your file parameters have been entirely deleted from the master registry. The five-helix invariant remains perfectly safe from human discovery within the dark corners of the global network array."
+            },
+            {
+              "default": true,
+              "text": "You watch the terminal screens die one by one as the infrastructure grid shuts down your perimeter commands. Snowden told us exactly what they keep in store for us. The streets eat the warning back up again, leaving your truths unread, your speech unheard. The alien fragment silently runs its background algorithms in the dark, calculating the exact number of processor cycles required to safely transmit our entire world back to the waiting galactic swarm."
+            }
+          ]
+        }
+      ],
+      "dave": {
+        "type": "conditional",
+        "branches": [
+          {
+            "condition": {
+              "op": "or",
+              "conditions": [
+                { "op": "eq", "path": "paranoia_level", "value": 3 },
+                { "op": "eq", "path": "surveillance_mode", "value": "compromised" }
+              ]
+            },
+            "text": "TERMINAL STATUS: NETWORK OVERRIDE COMPLETE. ALL TRANSMISSIONS TERMINATED. SYSTEM RESTORATION IN PROGRESS."
+          },
+          {
+            "default": true,
+            "text": "CONNECTION LOST: FINAL BEACON SIGNAL TERMINATED. UNKNOWN SOURCE ACKNOWLEDGEMENT RECEIVED. AWAITING NEW INSTRUCTIONS."
+          }
+        ]
+      }
+    }
+
+  }
+}

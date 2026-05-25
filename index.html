@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>EXTINCTION AVERTED // GENERATIVE TEXT ENGINE</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+        <style>
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            :root {
+                --bg: #0c0c0a;
+                --bg-dead: #180808;
+                --bg-network: #080a10;
+                --text: #ddd8cc;
+                --text-dim: #7a7670;
+                --accent: #b89a5a;
+                --accent-dim: #5a4b2a;
+                --dave: #c4821a;
+                --dave-dim: #5a3a08;
+                --border: #2a2a26;
+                --choice-hover: rgba(184, 154, 90, 0.06);
+                --transition: 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            }
+
+            html { scroll-behavior: smooth; }
+
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: "Cormorant Garamond", Georgia, serif;
+                font-size: 19px;
+                line-height: 1.8;
+                font-weight: 300;
+                min-height: 100vh;
+                -webkit-font-smoothing: antialiased;
+                transition: background var(--transition), color var(--transition);
+                overflow-x: hidden;
+            }
+
+            body::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+                pointer-events: none;
+                z-index: 1000;
+            }
+
+            body.is-dead { background: var(--bg-dead); }
+            body.is-network-override { background: var(--bg-network); }
+
+            #app {
+                max-width: 720px;
+                margin: 0 auto;
+                padding: 4rem 2rem 10rem;
+            }
+
+            /* ── MASTHEAD ── */
+            #masthead {
+                display: flex;
+                align-items: baseline;
+                gap: 2rem;
+                margin-bottom: 4rem;
+                border-bottom: 1px solid var(--border);
+                padding-bottom: 1.5rem;
+            }
+
+            #masthead-title {
+                font-family: "Space Mono", monospace;
+                font-size: 0.65rem;
+                letter-spacing: 0.25em;
+                color: var(--text-dim);
+                text-transform: uppercase;
+                flex: 1;
+            }
+
+            #masthead-status {
+                font-family: "Space Mono", monospace;
+                font-size: 0.6rem;
+                letter-spacing: 0.15em;
+                color: var(--accent);
+                text-transform: uppercase;
+            }
+
+            /* ── INTERACTIVE CANVAS ── */
+            #scene { display: block; }
+
+            #chapter-label {
+                font-family: "Space Mono", monospace;
+                font-size: 0.6rem;
+                letter-spacing: 0.2em;
+                color: var(--accent);
+                text-transform: uppercase;
+                margin-bottom: 2rem;
+                opacity: 0;
+                transform: translateY(-4px);
+                transition: opacity var(--transition), transform var(--transition);
+            }
+            #chapter-label.vis { opacity: 1; transform: none; }
+
+            #narrative-text {
+                opacity: 0;
+                transform: translateY(6px);
+                transition: opacity var(--transition), transform var(--transition);
+                transition-delay: 0.05s;
+                margin-bottom: 3rem;
+            }
+            #narrative-text.vis { opacity: 1; transform: none; }
+            #narrative-text p { margin-bottom: 1.4em; color: var(--text); }
+            #narrative-text p:last-child { margin-bottom: 0; }
+            #narrative-text strong { font-weight: 600; color: #fff; }
+
+            /* ── D.A.V.E. TERMINAL ── */
+            #scene-dave {
+                font-family: "Space Mono", monospace;
+                font-size: 0.72rem;
+                color: var(--dave);
+                line-height: 1.7;
+                padding: 1.2rem 1.5rem;
+                background: rgba(196, 130, 26, 0.02);
+                border-left: 1px solid var(--dave-dim);
+                margin-bottom: 3rem;
+                opacity: 0;
+                transform: translateY(4px);
+                transition: opacity var(--transition), transform var(--transition);
+                transition-delay: 0.12s;
+            }
+            #scene-dave.vis { opacity: 1; transform: none; }
+            .dave-label {
+                display: block;
+                font-weight: 700;
+                letter-spacing: 0.15em;
+                margin-bottom: 0.5rem;
+                color: var(--dave);
+            }
+
+            /* ── CHOICES ── */
+            #choices-wrap {
+                display: flex;
+                flex-direction: column;
+                gap: 0.8rem;
+                opacity: 0;
+                transform: translateY(6px);
+                transition: opacity var(--transition), transform var(--transition);
+                transition-delay: 0.2s;
+            }
+            #choices-wrap.vis { opacity: 1; transform: none; }
+
+            .choice {
+                display: flex;
+                align-items: flex-start;
+                text-align: left;
+                background: transparent;
+                border: 1px solid var(--border);
+                color: var(--text);
+                font-family: "Cormorant Garamond", Georgia, serif;
+                font-size: 0.95rem;
+                font-weight: 400;
+                padding: 1.1rem 1.4rem;
+                cursor: pointer;
+                transition: border var(--transition), background var(--transition), color var(--transition);
+            }
+            .choice:hover:not(:disabled) {
+                border-color: var(--accent);
+                background: var(--choice-hover);
+                color: #fff;
+            }
+            .choice:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+            .choice-clause {
+                font-family: "Space Mono", monospace;
+                font-size: 0.65rem;
+                color: var(--accent);
+                width: 3.5rem;
+                flex-shrink: 0;
+                padding-top: 0.2rem;
+                letter-spacing: 0.05em;
+            }
+
+            /* ── DEAD END / ENDING ── */
+            #dead-end, #ending {
+                display: none;
+                opacity: 0;
+                transform: translateY(10px);
+                transition: opacity var(--transition), transform var(--transition);
+                text-align: center;
+                padding: 4rem 0;
+            }
+            #dead-end.vis, #ending.vis { opacity: 1; transform: none; }
+
+            .alert-title {
+                font-family: "Space Mono", monospace;
+                font-size: 0.8rem;
+                letter-spacing: 0.3em;
+                text-transform: uppercase;
+                margin-bottom: 2rem;
+            }
+            #dead-end .alert-title { color: #ff3333; }
+            #ending .alert-title { color: var(--accent); }
+
+            .alert-text {
+                font-size: 1.1rem;
+                color: var(--text-dim);
+                margin-bottom: 3rem;
+                line-height: 1.7;
+            }
+
+            .btn-system {
+                background: transparent;
+                border: 1px solid var(--accent);
+                color: var(--accent);
+                font-family: "Space Mono", monospace;
+                font-size: 0.7rem;
+                letter-spacing: 0.15em;
+                padding: 1rem 2rem;
+                cursor: pointer;
+                text-transform: uppercase;
+                transition: all 0.3s ease;
+            }
+            .btn-system:hover {
+                background: var(--accent);
+                color: var(--bg);
+                box-shadow: 0 0 15px rgba(184, 154, 90, 0.3);
+            }
+
+            /* ── LOADING STATE ── */
+            #load-screen {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 60vh;
+                gap: 1.5rem;
+            }
+            .load-label {
+                font-family: "Space Mono", monospace;
+                font-size: 0.6rem;
+                letter-spacing: 0.3em;
+                color: var(--accent);
+                text-transform: uppercase;
+                animation: pulse 1.4s ease-in-out infinite;
+            }
+            @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+            /* ── DEV PANEL ── */
+            #dev-trigger {
+                position: fixed;
+                bottom: 1rem;
+                right: 1rem;
+                font-family: "Space Mono", monospace;
+                font-size: 0.55rem;
+                color: #333;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                z-index: 2000;
+            }
+            #dev-trigger:hover { color: var(--accent); }
+            #dev-panel {
+                display: none;
+                position: fixed;
+                bottom: 2.5rem;
+                right: 1rem;
+                background: #111;
+                border: 1px solid #222;
+                padding: 1rem;
+                font-family: "Space Mono", monospace;
+                font-size: 0.6rem;
+                color: #888;
+                z-index: 2000;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                min-width: 220px;
+            }
+            #dev-panel.active { display: block; }
+            .dev-stat { margin-bottom: 0.4rem; }
+            .dev-stat span { color: var(--accent); }
+            #dev-jump-input {
+                background: #000;
+                border: 1px solid #333;
+                color: #fff;
+                font-family: inherit;
+                font-size: inherit;
+                padding: 0.2rem;
+                width: 140px;
+                margin-top: 0.5rem;
+            }
+            .dev-state {
+                margin-top: 0.6rem;
+                padding-top: 0.6rem;
+                border-top: 1px solid #222;
+                color: #555;
+                font-size: 0.5rem;
+                line-height: 1.6;
+                max-height: 120px;
+                overflow-y: auto;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="app">
+            <header id="masthead">
+                <div id="masthead-title">EXTINCTION AVERTED // NETWORK SYSTEM</div>
+                <div id="masthead-status" id="masthead-status">INITIALIZING</div>
+            </header>
+
+            <!-- Loading screen -->
+            <div id="load-screen">
+                <div class="load-label">LOADING TRANSMISSION MATRIX</div>
+            </div>
+
+            <!-- Main scene (hidden until loaded) -->
+            <main id="scene" style="display:none">
+                <div id="chapter-label"></div>
+                <div id="narrative-text"></div>
+                <div id="scene-dave"></div>
+                <div id="choices-wrap"></div>
+            </main>
+
+            <section id="dead-end">
+                <div class="alert-title">▲ SIGNAL CORRUPTED // TACTICAL BLINDSPOT</div>
+                <div class="alert-text" id="dead-end-text"></div>
+                <button class="btn-system" id="btn-rollback">Rollback to Last Secure Heuristic</button>
+            </section>
+
+            <section id="ending">
+                <div class="alert-title">▼ COGNITIVE FIVE-HELIX MATRIX LOCK</div>
+                <div class="alert-text" id="ending-text"></div>
+                <button class="btn-system" onclick="resetEngine()">Reinitialize Transmission Matrix</button>
+            </section>
+        </div>
+
+        <button id="dev-trigger" onclick="toggleDev()">[SYS_DIAGNOSTICS]</button>
+        <div id="dev-panel">
+            <div class="dev-stat">NODE: <span id="dev-node">—</span></div>
+            <div class="dev-stat">CHECKPOINT: <span id="dev-cp">—</span></div>
+            <input type="text" id="dev-jump-input" placeholder="JUMP_TO_NODE"
+                   onkeydown="if(event.key==='Enter') devJump(this.value)" />
+            <div class="dev-state" id="dev-state-dump"></div>
+        </div>
+
+        <script>
+        // =========================================================================
+        // EXTINCTION AVERTED — JSON-DRIVEN NARRATIVE ENGINE v2.0
+        // =========================================================================
+        // Architecture: engine interprets story.json via a mini expression language.
+        // No eval(). Content is fully serializable and editable without touching engine code.
+        //
+        // JSON prose item types: static | pool_index | pool_key | asset_pool | conditional
+        // JSON dave spec types:  static | pool_key | conditional
+        // JSON action ops:       set | clamp_inc | push | set_min | set_max
+        // JSON condition ops:    eq | neq | gt | gte | lt | lte |
+        //                        array_includes | array_includes_any |
+        //                        array_nonempty | array_empty | or | and | not
+        // =========================================================================
+
+        let ENGINE_STATE = null;
+        let STORY        = null;
+        let PROSE_POOL   = null;
+        let currentNodeId      = null;
+        let secureCheckpointId = null;
+
+        // ─── PATH UTILITIES ───────────────────────────────────────────────────────
+
+        function getPath(obj, path) {
+            return path.split('.').reduce((o, k) => (o != null ? o[k] : undefined), obj);
+        }
+
+        function setPath(obj, path, value) {
+            const keys = path.split('.');
+            const last = keys.pop();
+            const target = keys.reduce((o, k) => o[k], obj);
+            if (target != null) target[last] = value;
+        }
+
+        // ─── CONDITION EVALUATOR ─────────────────────────────────────────────────
+
+        function evalCondition(cond, state) {
+            if (!cond) return true;
+            const val = cond.path ? getPath(state, cond.path) : null;
+
+            switch (cond.op) {
+                case 'eq':                return val === cond.value;
+                case 'neq':               return val !== cond.value;
+                case 'gt':                return val > cond.value;
+                case 'gte':               return val >= cond.value;
+                case 'lt':                return val < cond.value;
+                case 'lte':               return val <= cond.value;
+                case 'array_includes':    return Array.isArray(val) && val.includes(cond.value);
+                case 'array_includes_any':return Array.isArray(val) && (cond.values || []).some(v => val.includes(v));
+                case 'array_nonempty':    return Array.isArray(val) && val.length > 0;
+                case 'array_empty':       return Array.isArray(val) && val.length === 0;
+                case 'or':                return (cond.conditions || []).some(c => evalCondition(c, state));
+                case 'and':               return (cond.conditions || []).every(c => evalCondition(c, state));
+                case 'not':               return !evalCondition((cond.conditions || [])[0], state);
+                default:                  return false;
+            }
+        }
+
+        // ─── ACTION EXECUTOR ─────────────────────────────────────────────────────
+
+        function execActions(actions, state) {
+            if (!actions || !actions.length) return;
+            for (const a of actions) {
+                switch (a.op) {
+                    case 'set':
+                        setPath(state, a.path, a.value);
+                        break;
+                    case 'clamp_inc': {
+                        const cur = getPath(state, a.path) || 0;
+                        setPath(state, a.path, Math.min(cur + 1, a.max));
+                        break;
+                    }
+                    case 'push': {
+                        const arr = getPath(state, a.path);
+                        if (Array.isArray(arr) && !arr.includes(a.value)) arr.push(a.value);
+                        break;
+                    }
+                    case 'set_min': {
+                        const cur = getPath(state, a.path) || 0;
+                        setPath(state, a.path, Math.min(cur, a.value));
+                        break;
+                    }
+                    case 'set_max': {
+                        const cur = getPath(state, a.path) || 0;
+                        setPath(state, a.path, Math.max(cur, a.value));
+                        break;
+                    }
+                }
+            }
+        }
+
+        // ─── PROSE EVALUATOR ─────────────────────────────────────────────────────
+
+        function evalProseItem(item, state, pool) {
+            switch (item.type) {
+                case 'static':
+                    return { texts: [item.text], fx: [] };
+
+                case 'pool_index': {
+                    const idx  = Math.max(0, getPath(state, item.index_from) || 0);
+                    const arr  = pool[item.pool] || [];
+                    return { texts: [arr[Math.min(idx, arr.length - 1)] || ''], fx: [] };
+                }
+
+                case 'pool_key': {
+                    const key = getPath(state, item.key_from);
+                    const obj = pool[item.pool] || {};
+                    return { texts: [obj[key] || obj[item.default_key] || ''], fx: [] };
+                }
+
+                case 'asset_pool': {
+                    // Checks assets_acquired for first matching priority key
+                    const assets = getPath(state, 'assets_acquired') || [];
+                    const obj    = pool[item.pool] || {};
+                    const match  = (item.priority || []).find(k => assets.includes(k));
+                    return { texts: [obj[match || item.default_key] || ''], fx: [] };
+                }
+
+                case 'conditional': {
+                    for (const branch of (item.branches || [])) {
+                        if (branch.default || evalCondition(branch.condition, state)) {
+                            const texts = [];
+                            if (branch.text)     texts.push(branch.text);
+                            if (branch.pool_ref) {
+                                const obj = pool[branch.pool_ref.pool] || {};
+                                texts.push(obj[branch.pool_ref.key] || '');
+                            }
+                            return { texts, fx: branch.side_effects || [] };
+                        }
+                    }
+                    return { texts: [], fx: [] };
+                }
+
+                default:
+                    return { texts: [], fx: [] };
+            }
+        }
+
+        function evalProse(items, state, pool) {
+            const texts = [];
+            const allFx = [];
+            for (const item of (items || [])) {
+                const { texts: t, fx } = evalProseItem(item, state, pool);
+                texts.push(...t.filter(Boolean));
+                allFx.push(...fx);
+            }
+            execActions(allFx, state); // Apply conditional side effects
+            return texts;
+        }
+
+        function evalDave(spec, state, pool) {
+            if (!spec) return null;
+            if (typeof spec === 'string') return spec;
+            switch (spec.type) {
+                case 'static':   return spec.text;
+                case 'pool_key': {
+                    const key = getPath(state, spec.key_from);
+                    return (pool[spec.pool] || {})[key] || null;
+                }
+                case 'conditional': {
+                    for (const branch of (spec.branches || [])) {
+                        if (branch.default || evalCondition(branch.condition, state)) {
+                            return branch.text || null;
+                        }
+                    }
+                    return null;
+                }
+                default: return null;
+            }
+        }
+
+        // ─── STATE PERSISTENCE ───────────────────────────────────────────────────
+        // Persists nodeId + full ENGINE_STATE snapshot so branching history survives reload.
+
+        function saveEngineState(nodeId, checkpointId) {
+            try {
+                localStorage.setItem("ea_node",       nodeId);
+                localStorage.setItem("ea_checkpoint",  checkpointId || nodeId);
+                localStorage.setItem("ea_state_snap",  JSON.stringify(ENGINE_STATE));
+            } catch (_) {}
+        }
+
+        function loadEngineState() {
+            try {
+                return {
+                    node:  localStorage.getItem("ea_node"),
+                    cp:    localStorage.getItem("ea_checkpoint"),
+                    state: JSON.parse(localStorage.getItem("ea_state_snap") || "null")
+                };
+            } catch (_) {
+                return { node: null, cp: null, state: null };
+            }
+        }
+
+        function clearEngineState() {
+            try {
+                localStorage.removeItem("ea_node");
+                localStorage.removeItem("ea_checkpoint");
+                localStorage.removeItem("ea_state_snap");
+            } catch (_) {}
+        }
+
+        // ─── RENDER FUNCTIONS ────────────────────────────────────────────────────
+
+        function renderEngineNode(nodeId) {
+            const node = STORY.nodes[nodeId];
+            if (!node) {
+                console.error("FATAL: Unknown node:", nodeId);
+                return;
+            }
+
+            currentNodeId = nodeId;
+            updateDiagnostics(nodeId, node);
+
+            if (node.type === "dead_end") {
+                executeDeadEndTransition(node);
+            } else if (node.type === "ending") {
+                executeEndingTransition(node);
+            } else {
+                secureCheckpointId = nodeId;
+                saveEngineState(nodeId, nodeId);
+                executeSceneTransition(node);
+            }
+        }
+
+        function executeFadeSequence(callback) {
+            ["chapter-label","narrative-text","scene-dave","choices-wrap"].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove("vis");
+            });
+            setTimeout(callback, 450);
+        }
+
+        function executeSceneTransition(node) {
+            document.body.className = node.environment_class ? node.environment_class : "";
+
+            document.getElementById("dead-end").style.display = "none";
+            document.getElementById("dead-end").classList.remove("vis");
+            document.getElementById("ending").style.display   = "none";
+            document.getElementById("ending").classList.remove("vis");
+            document.getElementById("scene").style.display    = "block";
+
+            executeFadeSequence(() => {
+                // Chapter label
+                const labelEl = document.getElementById("chapter-label");
+                labelEl.textContent = node.chapter || "";
+                if (node.chapter) labelEl.classList.add("vis");
+
+                // Prose — evaluate JSON items through the expression engine
+                const paragraphs = evalProse(node.prose, ENGINE_STATE, PROSE_POOL);
+                const textEl = document.getElementById("narrative-text");
+                textEl.innerHTML = paragraphs.map(p => `<p>${p}</p>`).join("");
+                textEl.classList.add("vis");
+
+                // D.A.V.E. panel
+                const daveEl   = document.getElementById("scene-dave");
+                const daveText = evalDave(node.dave, ENGINE_STATE, PROSE_POOL);
+                if (daveText) {
+                    daveEl.innerHTML = `<span class="dave-label">D.A.V.E. // BACK-CHANNEL COMMUNICATIONS</span>${daveText}`;
+                    daveEl.style.display = "block";
+                    daveEl.classList.add("vis");
+                } else {
+                    daveEl.style.display = "none";
+                }
+
+                // Choices
+                const choicesEl = document.getElementById("choices-wrap");
+                choicesEl.innerHTML = "";
+
+                // Filter choices by condition
+                const availableChoices = (node.choices || []).filter(c =>
+                    !c.condition || evalCondition(c.condition, ENGINE_STATE)
+                );
+
+                availableChoices.forEach(choice => {
+                    const btn = document.createElement("button");
+                    btn.className = "choice";
+                    btn.innerHTML = `<span class="choice-clause">${choice.clause || ""}</span>${choice.text}`;
+                    btn.addEventListener("click", () => {
+                        choicesEl.querySelectorAll(".choice").forEach(b => b.disabled = true);
+                        execActions(choice.actions || [], ENGINE_STATE);
+                        renderEngineNode(choice.leads_to);
+                    });
+                    choicesEl.appendChild(btn);
+                });
+                choicesEl.classList.add("vis");
+
+                // Update dev state dump
+                updateDevStateDump();
+            });
+        }
+
+        function executeDeadEndTransition(node) {
+            document.body.className = "is-dead";
+            document.getElementById("scene").style.display  = "none";
+            document.getElementById("ending").style.display = "none";
+
+            const deadEl = document.getElementById("dead-end");
+            deadEl.style.display = "block";
+
+            const paragraphs = node.prose
+                ? evalProse(node.prose, ENGINE_STATE, PROSE_POOL)
+                : [node.narrative || ""];
+            document.getElementById("dead-end-text").innerHTML =
+                paragraphs.map(p => `<p>${p}</p>`).join("");
+            setTimeout(() => deadEl.classList.add("vis"), 50);
+        }
+
+        function executeEndingTransition(node) {
+            document.body.className = "is-network-override";
+            document.getElementById("scene").style.display    = "none";
+            document.getElementById("dead-end").style.display = "none";
+
+            const endEl = document.getElementById("ending");
+            endEl.style.display = "block";
+
+            const paragraphs = node.prose
+                ? evalProse(node.prose, ENGINE_STATE, PROSE_POOL)
+                : [node.narrative || ""];
+            document.getElementById("ending-text").innerHTML =
+                paragraphs.map(p => `<p>${p}</p>`).join("");
+            setTimeout(() => endEl.classList.add("vis"), 50);
+        }
+
+        function resetEngine() {
+            clearEngineState();
+            ENGINE_STATE = JSON.parse(JSON.stringify(STORY.initial_state));
+            secureCheckpointId = null;
+            renderEngineNode(STORY.start);
+        }
+
+        // ─── DEV PANEL ───────────────────────────────────────────────────────────
+
+        function toggleDev() {
+            document.getElementById("dev-panel").classList.toggle("active");
+        }
+
+        function updateDiagnostics(nodeId, node) {
+            document.getElementById("dev-node").textContent = nodeId;
+            document.getElementById("dev-cp").textContent   = secureCheckpointId || "START";
+        }
+
+        function updateDevStateDump() {
+            const el = document.getElementById("dev-state-dump");
+            if (!ENGINE_STATE) return;
+            el.textContent = JSON.stringify(ENGINE_STATE, null, 1);
+        }
+
+        function devJump(nodeId) {
+            if (STORY && STORY.nodes[nodeId]) {
+                renderEngineNode(nodeId);
+            } else {
+                console.error("DIAGNOSTICS: Unknown node:", nodeId);
+            }
+        }
+
+        // ─── BOOTSTRAP ───────────────────────────────────────────────────────────
+
+        document.getElementById("btn-rollback").addEventListener("click", () => {
+            if (secureCheckpointId && STORY.nodes[secureCheckpointId]) {
+                renderEngineNode(secureCheckpointId);
+            } else {
+                resetEngine();
+            }
+        });
+
+        async function bootEngine() {
+            const statusEl = document.getElementById("masthead-status");
+
+            try {
+                const resp = await fetch("story.json");
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const data = await resp.json();
+
+                STORY      = data;
+                PROSE_POOL = data.prose_pool || {};
+
+                statusEl.textContent = "ONLINE";
+                document.getElementById("load-screen").style.display = "none";
+
+                // Restore or start fresh
+                const saved = loadEngineState();
+                if (saved.node && STORY.nodes[saved.node] && saved.state) {
+                    ENGINE_STATE       = saved.state;
+                    secureCheckpointId = saved.cp;
+                    renderEngineNode(saved.node);
+                } else {
+                    ENGINE_STATE = JSON.parse(JSON.stringify(STORY.initial_state));
+                    renderEngineNode(STORY.start);
+                }
+
+            } catch (err) {
+                statusEl.textContent = "FAULT";
+                document.getElementById("load-screen").innerHTML =
+                    `<div style="font-family:'Space Mono',monospace;font-size:0.65rem;color:#ff3333;letter-spacing:0.2em;line-height:2">
+                        FATAL: TRANSMISSION MATRIX LOAD FAILURE<br>
+                        <span style="color:#555">${err.message}</span><br><br>
+                        <span style="color:#7a7670">Ensure story.json is present and served via HTTP.<br>
+                        Local file:// protocol is blocked by browser CORS policy.<br>
+                        Use: python -m http.server 8000</span>
+                    </div>`;
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", bootEngine);
+        </script>
+    </body>
+</html>
